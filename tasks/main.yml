@@ -1,17 +1,28 @@
 ---
-- name: 'Install apt-transport-https'
+- name: 'Uninstall previous versions of docker'
   apt:
-    name: 'apt-transport-https'
+    name:
+      - 'docker'
+      - 'docker-engine'
+      - 'docker.io'
+      - 'containerd'
+      - 'runc'
+    state: 'absent'
+
+- name: 'Install a few prereqs'
+  apt:
+    name:
+      - 'apt-transport-https'
 
 - name: 'Add the docker apt signing key'
   apt_key:
-    keyserver: 'pool.sks-keyservers.net'
-    id: '58118E89F3A912897C070ADBF76221572C52609D'
+    url: 'https://download.docker.com/linux/ubuntu/gpg'
+    state: 'present'
   notify: 'docker-apt-get-update'
 
 - name: 'Add the official docker repo'
   apt_repository:
-    repo: 'deb https://apt.dockerproject.org/repo {{ansible_distribution|lower}}-{{ ansible_distribution_release }} main'
+    repo: 'deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ansible_distribution_release|lower}} stable'
     state: 'present'
   notify: 'docker-apt-get-update'
 
@@ -19,7 +30,10 @@
 
 - name: 'Install docker'
   apt:
-    name: 'docker-engine'
+    name:
+      - 'docker-ce'
+      - 'docker-ce-cli'
+      - 'containerd.io'
     state: 'latest'
 
 - name: 'Create the /etc/docker directory'
@@ -44,11 +58,11 @@
     enabled: 'yes'
 
 - name: 'Ensure that the docker service is functional'
-  docker_ping:
+  command: 'docker info'
   register: result
   retries: 5
   delay: 10
-  until: result|success
+  until: 'result is success'
 
 - name: 'Install python-pip'
   apt:

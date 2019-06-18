@@ -48,12 +48,13 @@ Use it in a playbook as follows:
     - role: 'marvinpinto.docker'
       become: true
   tasks:
-    - name: 'Ensure that the docker daemon is functional'
+    - name: 'Ensure that the docker service is functional'
       become: true
-      docker_ping:
+      command: 'docker info'
+      register: result
       retries: 5
       delay: 10
-      until: result|success
+      until: 'result is success'
     - name: 'hello world'
       docker:
         name: 'helloworld'
