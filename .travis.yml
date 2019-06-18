@@ -1,8 +1,8 @@
 ---
 language: python
-python: "2.7"
+python: "3.7"
 sudo: required
-dist: trusty
+dist: xenial
 
 before_install:
  - sudo apt-get update -qq
@@ -11,7 +11,7 @@ before_install:
 install:
   - sudo pip install ansible
   - echo -e 'localhost  ansible_connection=local' > tests/inventory
-  - echo -e '[defaults]\nroles_path = ../\nhostfile = ./tests/inventory' > ansible.cfg
+  - echo -e '[defaults]\nroles_path = ../\nhostfile = ./tests/inventory\nansible_python_interpreter=/usr/bin/python3' > ansible.cfg
 
 script:
   - ansible-playbook --syntax-check tests/role.yml
