@@ -68,11 +68,10 @@
   retries: 5
   delay: 10
   until: 'result is success'
-  register: funcdbg
 
 - name: Debug
   debug:
-    var: funcdbg
+    var: result
 
 - name: 'Install python-pip'
   apt:
