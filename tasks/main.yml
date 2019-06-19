@@ -56,6 +56,11 @@
     name: 'docker'
     state: 'started'
     enabled: 'yes'
+  register: startdbg
+
+- name: Debug start
+  debug:
+    var: startdbg
 
 - name: 'Ensure that the docker service is functional'
   command: 'docker info'
