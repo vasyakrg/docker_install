@@ -58,7 +58,7 @@
     enabled: 'yes'
   register: startdbg
 
-- name: Debug start
+- name: Debug
   debug:
     var: startdbg
 
@@ -68,6 +68,11 @@
   retries: 5
   delay: 10
   until: 'result is success'
+  register: funcdbg
+
+- name: Debug
+  debug:
+    var: funcdbg
 
 - name: 'Install python-pip'
   apt:
