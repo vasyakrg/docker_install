@@ -78,7 +78,7 @@
 
 - name: 'Install Docker-compose'
   uri:
-    url: https://github.com/docker/compose/releases/download/"{{ docker_version_docker_compose }}"/docker-compose-$(uname -s)-$(uname -m)"
+    url: 'https://github.com/docker/compose/releases/download/{{ docker_version_docker_compose }}/docker-compose-Linux-x86_64'
     dest: /usr/local/bin/docker-compose
   tags: docker_compose_only
 
