@@ -1,7 +1,7 @@
 ---
 - hosts: 'localhost'
   roles:
-    - role: 'ansible-role-docker'
+    - role: 'docker_install'
       become: true
   tasks:
     - name: 'Ensure that the docker daemon is functional'
@@ -31,4 +31,4 @@
       register: result
       retries: 5
       delay: 10
-      until: result|success
+      until: result is success
