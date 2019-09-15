@@ -23,7 +23,7 @@
 
 - name: 'Add the official docker repo'
   apt_repository:
-    repo: 'deb [arch=amd64] https://download.docker.com/linux/{{ansible_distribution|lower}} {{ansible_distribution_release}} stable'
+    repo: 'deb [arch=amd64] https://download.docker.com/linux/{{ ansible_distribution|lower }} {{ ansible_distribution_release }} stable'
     state: 'present'
 
 - name: 'Install docker'
@@ -67,20 +67,20 @@
   stat:
     path: /run/docker.pid
   register: stat_result
-  failed_when: stat_result.stat.exists != true
-  tag: docker_check
+  failed_when: not stat_result.stat.exists
+  tags: docker_check
 
 - name: 'Result of check docker.pid'
   debug:
     msg: 'Docker started'
   when: stat_result.stat.exists
-  tag: docker_check
+  tags: docker_check
 
 - name: 'Install Docker-compose'
   uri:
     url: https://github.com/docker/compose/releases/download/"{{ docker_version_docker_compose }}"/docker-compose-$(uname -s)-$(uname -m)"
     dest: /usr/local/bin/docker-compose
-  tag: docker_compose_only
+  tags: docker_compose_only
 
 - name: 'Create symlink to docker-compose'
   file:
@@ -88,4 +88,4 @@
     dest: '/usr/bin/docker-compose'
     mode: 'a+x'
     state: 'link'
-  tag: docker_compose_only
+  tags: docker_compose_only
