@@ -11,7 +11,7 @@
 
 - name: 'Add the official docker repo'
   apt_repository:
-    repo: 'deb https://apt.dockerproject.org/repo {{ansible_distribution|lower}}-{{ ansible_distribution_release }} main'
+    repo: 'deb https://apt.dockerproject.org/repo {{ ansible_distribution|lower }}-{{ ansible_distribution_release }} main'
     state: 'present'
   notify: 'docker-apt-get-update'
 
@@ -48,14 +48,14 @@
   register: username_on_the_host
 
 - name: 'Add current user to docker group'
-  become: true
+  become: yes
   user:
-    name: username_on_the_host
+    name: "{{ username_on_the_host }}"
     groups: 'docker'
     append: yes
 
 - name: 'Ensure that the docker service is functional'
-  become: true
+  become: yes
   docker_ping:
   register: result
   retries: 5
