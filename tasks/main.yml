@@ -77,15 +77,15 @@
   tags: docker_check
 
 - name: 'Install Docker-compose'
-  uri:
+  get_url:
     url: 'https://github.com/docker/compose/releases/download/{{ docker_version_docker_compose }}/docker-compose-Linux-x86_64'
     dest: /usr/local/bin/docker-compose
+    mode: 'a+x'
   tags: docker_compose_only
 
 - name: 'Create symlink to docker-compose'
   file:
     scr: '/usr/local/bin/docker-compose'
     dest: '/usr/bin/docker-compose'
-    mode: 'a+x'
     state: 'link'
   tags: docker_compose_only
