@@ -43,7 +43,19 @@
     state: 'started'
     enabled: 'yes'
 
+- name: 'Get the username running the deploy'
+  shell: whoami
+  register: username_on_the_host
+
+- name: 'Add current user to docker group'
+  become: true
+  user:
+    name: {{ username_on_the_host }}
+    groups: 'docker'
+    append: yes
+
 - name: 'Ensure that the docker service is functional'
+  become: true
   docker_ping:
   register: result
   retries: 5
@@ -55,11 +67,6 @@
     name: 'python-pip'
     state: 'present'
 
-- name: 'Install virtualenv'
-  pip:
-    name: 'virtualenv'
-    state: 'present'
-
 - name: 'Install docker-py'
   pip:
     name: 'docker-py'
@@ -67,5 +74,5 @@
 
 - name: 'Install docker-compose'
   pip:
-    name: docker-compose
+    name: 'docker-compose'
     state: 'present'
