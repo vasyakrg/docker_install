@@ -85,7 +85,7 @@
 
 - name: 'Create symlink to docker-compose'
   file:
-    scr: '/usr/local/bin/docker-compose'
+    src: '/usr/local/bin/docker-compose'
     dest: '/usr/bin/docker-compose'
     state: 'link'
   tags: docker_compose_only
