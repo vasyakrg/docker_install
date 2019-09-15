@@ -4,18 +4,22 @@
     - role: 'docker_install'
       become: true
   tasks:
-    - name: 'Ensure that the docker daemon is functional'
-      become: true
-      docker_ping:
-      register: result
-      retries: 5
-      delay: 10
-      until: result|success
+    - name: 'Check that the docker.pid exists'
+      stat:
+        path: /run/docker.pid
+      register: stat_result
+      failed_when: !stat_result.stat.exists
+
+    - name: 'Result of check docker.pid'
+      debug:
+        msg: 'Docker started'
+      when: stat_result.stat.exists
 
     - name: 'Pull in the latest nginx container'
       become: true
       docker_image:
         name: 'nginx:latest'
+      when: stat_result.stat.exists
 
     - name: 'Start the nginx container'
       become: true
@@ -23,12 +27,4 @@
         name: 'nginx'
         image: 'nginx:latest'
         state: 'started'
-
-    - name: 'Ensure that the docker daemon is functional specifically through /var/run/docker.sock'
-      become: true
-      docker_ping:
-        unix_socket: '/var/run/docker.sock'
-      register: result
-      retries: 5
-      delay: 10
-      until: result is success
+      when: stat_result.stat.exists

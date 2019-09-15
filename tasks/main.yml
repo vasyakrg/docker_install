@@ -43,24 +43,23 @@
     state: 'started'
     enabled: 'yes'
 
-- name: 'Get the username running the deploy'
-  shell: whoami
-  register: username_on_the_host
-
 - name: 'Add current user to docker group'
   become: yes
   user:
-    name: "{{ username_on_the_host }}"
+    name: "{{ docker_user }}"
     groups: 'docker'
     append: yes
 
-- name: 'Ensure that the docker service is functional'
-  become: yes
-  docker_ping:
-  register: result
-  retries: 5
-  delay: 10
-  until: result is success
+- name: 'Check that the docker.pid exists'
+  stat:
+    path: /run/docker.pid
+  register: stat_result
+  failed_when: !stat_result.stat.exists
+
+- name: 'Result of check docker.pid'
+  debug:
+    msg: 'Docker started'
+  when: stat_result.stat.exists
 
 - name: 'Install python-pip'
   apt:
