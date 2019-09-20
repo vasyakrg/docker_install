@@ -1,5 +1,5 @@
 galaxy_info:
-  author: Marvin Pinto
+  author: Vassiliy Yegorov
   description: |
     This Ansible role enables people to install the latest Docker on an Ubuntu-like
     system. It also provides a handy library function to validate that the Docker

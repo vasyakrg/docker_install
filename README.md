@@ -1,11 +1,5 @@
 docker
 ======
-
-[![Build Status](https://img.shields.io/travis/marvinpinto/ansible-role-docker/master.svg?style=flat-square)](https://travis-ci.org/marvinpinto/ansible-role-docker)
-[![Ansible Galaxy](https://img.shields.io/badge/ansible--galaxy-docker-blue.svg?style=flat-square)](https://galaxy.ansible.com/marvinpinto/docker)
-[![License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.txt)
-
-
 This Ansible role enables people to install the latest Docker on an Ubuntu-like
 system. It also provides a handy library function to validate that the Docker
 daemon is running and functional.
@@ -38,25 +32,28 @@ Examples
 
 Install this module from Ansible Galaxy into the './roles' directory:
 ```bash
-ansible-galaxy install marvinpinto.docker -p ./roles
+- name: vasyakrg.docker_install
+  src: git+https://github.com/vasyakrg/docker_install.git
+  version: origin/master
 ```
 
 Use it in a playbook as follows:
 ```yaml
-- hosts: 'servers'
+- hosts: all
   roles:
-    - role: 'marvinpinto.docker'
+    - role: vasyakrg.docker_install
+      tags: docker
       become: true
-  tasks:
-    - name: 'Ensure that the docker daemon is functional'
-      become: true
-      docker_ping:
-      retries: 5
-      delay: 10
-      until: result|success
-    - name: 'hello world'
-      docker:
-        name: 'helloworld'
-        image: 'hello-world'
-        state: 'started'
+
+  vars:
+    docker_user: "vasyansk"
+    docker_additional_service_opts: |
+      {
+        "exec-opts": ["native.cgroupdriver=systemd"],
+        "log-driver": "json-file",
+        "log-opts": {
+          "max-size": "100m"
+        },
+        "storage-driver": "overlay2"
+      }
 ```
